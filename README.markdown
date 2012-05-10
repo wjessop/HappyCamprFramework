@@ -31,3 +31,14 @@ Sending a message is simple
 ```
 
 Everything else uses blocks to get call backs. All of the blocks will be called on the main thread.
+
+### Installing in Xcode 4 (Mac OS X)
+
+- Copy `HappyCampfire.framework` to your project directory (maybe in MyProject/Resources/.)
+- Add the `HappyCampfire.framework` files (from MyProject/Resources/) to your target.
+- In Build Settings, add `@loader_path/../Resources` to `Runpath Search Paths`. If you don't see `Runpath Search Paths` make sure `All` is selected instead of 'Basic'.
+- In Build Phases, select `Add Build Phase`, then `Add Copy Files`.
+  - Change the Destination to `Resources`.
+  - Drag `HappyCampfire.framework` into the the build phase
+  - Make sure the copy phase appears before any `Run Script` phases
+- Import with `#import "HappyCampfire/HappyCampfire.h"`.
