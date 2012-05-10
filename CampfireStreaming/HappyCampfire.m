@@ -38,6 +38,7 @@
 -(void)dealloc
 {
    [campfireURL release];
+	[super dealloc];
 }
 
 -(NSString*)messageWithType:(NSString*)messageType andMessage:(NSString*)message
@@ -61,28 +62,18 @@
 
 -(void)request:(ASIHTTPRequest *)request didReceiveData:(NSData *)data
 {
-   NSString *dataString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-   
    if( !([data length] > 1) )
-      return;
-   
-   NSArray *messagesInStrings = [dataString componentsSeparatedByString:@"}"];
-   NSMutableArray *fixedMessageStrings = [NSMutableArray array];
-   int i=0;
+		return;
+
+   NSString *dataString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+   NSArray *messagesInStrings = [dataString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
    for( NSString *messageString in  messagesInStrings )
    {
-      [fixedMessageStrings addObject:[messageString stringByAppendingString:@"}"]];
-      i++;
-   }
-   
-   for( NSString *fixedString in fixedMessageStrings )
-   {
-      if( !([fixedString length] > 2) )
-         continue;
-      
-      HCMessage *message = [HCMessage messageWithJSON:fixedString];
+	   if( !([messageString length] > 2) )
+		   continue;
 
-      [delegate messageReceived:message];      
+	   HCMessage *message = [HCMessage messageWithJSON:messageString];
+	   [delegate messageReceived:message];
    }
    
 }
